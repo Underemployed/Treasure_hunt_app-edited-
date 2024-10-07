@@ -8,6 +8,9 @@ var hbs = require("express-handlebars");
 const db = require("./config/dbConnection");
 var session = require("express-session");
 
+require('dotenv').config();
+
+
 const {
   allowInsecurePrototypeAccess,
 } = require("@handlebars/allow-prototype-access");
