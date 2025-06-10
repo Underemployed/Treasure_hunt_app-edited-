@@ -1,4 +1,3 @@
-var createError = require("http-errors");
 var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
@@ -8,19 +7,17 @@ var hbs = require("express-handlebars");
 const db = require("./config/dbConnection");
 var session = require("express-session");
 
-require('dotenv').config();
-
+require("dotenv").config();
 
 const {
   allowInsecurePrototypeAccess,
 } = require("@handlebars/allow-prototype-access");
-
 var adminRouter = require("./routes/admin");
 var playerRouter = require("./routes/player");
 
 var app = express();
 var PORT = process.env.PORT || 80;
-// if u use npm start and run thru www file instead
+// if u use npm start and run thru www file instead added if condition ...
 if (require.main === module) {
   app.listen(PORT, () => {
     console.log("app is listening at port", PORT);
@@ -34,14 +31,15 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "hbs");
 app.engine(
   "hbs",
-  hbs({
+  hbs.create({
     extname: "hbs",
     defaultLayout: "layout",
     layoutsDir: __dirname + "/views/layout/",
     partialsDir: __dirname + "/views/partials/",
     handlebars: allowInsecurePrototypeAccess(Handlebars),
-  }),
+  }).engine
 );
+
 
 app.use(logger("dev"));
 app.use(express.json());
@@ -49,14 +47,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 const oneDay = 1000 * 60 * 60 * 24;
-app.use(
-  session({
-    secret: "thisismysecrctekeyfhrgfgrfrty84fwir767",
-    saveUninitialized: true,
-    cookie: { maxAge: oneDay },
-    resave: false,
-  }),
-);
+
 
 //data base connection
 db.connect(function (err) {
