@@ -3,7 +3,7 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 const Handlebars = require("handlebars");
-var hbs = require("express-handlebars");
+const { engine } = require("express-handlebars"); 
 const db = require("./config/dbConnection");
 var session = require("express-session");
 
@@ -31,15 +31,14 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "hbs");
 app.engine(
   "hbs",
-  hbs.create({
+  engine({
     extname: "hbs",
     defaultLayout: "layout",
     layoutsDir: __dirname + "/views/layout/",
     partialsDir: __dirname + "/views/partials/",
     handlebars: allowInsecurePrototypeAccess(Handlebars),
-  }).engine
+  }) 
 );
-
 
 app.use(logger("dev"));
 app.use(express.json());
@@ -47,7 +46,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 const oneDay = 1000 * 60 * 60 * 24;
-
 
 //data base connection
 db.connect(function (err) {
