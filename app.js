@@ -20,9 +20,14 @@ var playerRouter = require("./routes/player");
 
 var app = express();
 var PORT = process.env.PORT || 80;
-app.listen(PORT, () => {
-  console.log("app is listening at port", PORT);
-});
+// if u use npm start and run thru www file instead
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log("app is listening at port", PORT);
+  }).on('error', (err) => {
+    console.error('Server failed to start:', err);
+  });
+}
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));

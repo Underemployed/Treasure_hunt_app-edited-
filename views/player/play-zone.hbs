@@ -53,5 +53,23 @@
 </div>
 <audio src="/music/Sixthells.mp3" id="audio"></audio>
 <div class="footer mt-0">
-  <p>Developed by <a href="https://istegecb.com/" style="color: #ff4655; text-decoration: none;">ISTE SB GECBH</a></p>
+  <p>Developed by <a href="https://istegecb.in/" style="color: #ff4655; text-decoration: none;">ISTE SB GECBH</a></p>
 </div>
+
+<script>
+  const audio = document.getElementById("audio");
+  const musicAnimation = document.getElementById("music-animation");
+
+  function play() {
+    if (audio.paused) {
+      audio.play().then(() => {
+        musicAnimation.style.display = "flex";
+      }).catch((err) => {
+        console.error("Autoplay blocked or other error:", err);
+      });
+    } else {
+      audio.pause();
+      musicAnimation.style.display = "none";
+    }
+  }
+</script>
