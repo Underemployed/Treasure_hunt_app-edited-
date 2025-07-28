@@ -63,5 +63,9 @@ module.exports={
             })
         })
     },
+    getAllCluesFromDb: async () => {
+        return await db.get().collection("Clues").find().toArray();
+    }
+
 
 }

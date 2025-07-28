@@ -103,6 +103,14 @@ function finalCheck(thisClueNo, teamId, nextPageName, res) {
     }
   });
 }
+//newly added fn 
+function normalizeAnswer(ans) {
+  return ans
+    .toLowerCase()             
+    .replace(/\s+/g, "")        // remove all spaces
+    .replace(/[^a-z0-9]/g, ""); // remove special chars
+}
+
 
 /* GET users listing. */
 router.get("/", function (req, res) {
@@ -116,9 +124,8 @@ router.get("/", function (req, res) {
   }
 });
 
-router.post("/clue", function (req, res) {
+router.post("/clue", async function (req, res) {
   let title = "Vista Voyage";
-
   let data = req.body;
   var teamId = data.teamId;
   teamId = teamId.replace(/\s+/g, "").toLowerCase();
@@ -127,8 +134,25 @@ router.post("/clue", function (req, res) {
     var answer = data.answer;
     answer = answer.toLowerCase().trim();
 
-    switch (answer) {
-      case "dr e sreedharan":
+    //newly added 
+    // fetch clues from db
+    const ansCollection = await teamHelper.getAllCluesFromDb();
+    console.log("Ans fetched", ansCollection);
+    let clueNum = null;
+    let clueObj = null;
+    ansCollection.forEach((clue) => {
+      if (clue.answers.some(a => normalizeAnswer(a) === normalizeAnswer(answer))) { 
+        clueNum = clue.ans;
+        clueObj = clue;
+      }
+    });
+
+    if (clueNum === null) {
+      session.errMsg = "Wrong answer !";
+      return res.redirect("/");
+    }
+    switch (clueNum) {
+      case 1:
         teamHelper.isTeam(teamId).then((result) => {
           if (result) {
             res.render("clues/clue2", {
@@ -143,114 +167,60 @@ router.post("/clue", function (req, res) {
           }
         });
         break;
-      case "e sreedharan":
-        teamHelper.isTeam(teamId).then((result) => {
-          if (result) {
-            res.render("clues/clue2", { msg: "Already completed" });
-          } else {
-            teamDetails = createTeam(teamId);
-            teamHelper.addTeam(teamDetails).then((data) => {
-              res.render("clues/clue2");
-            });
-          }
-        });
-        break;
-      case "sreedharan":
-        teamHelper.isTeam(teamId).then((result) => {
-          if (result) {
-            res.render("clues/clue2", { msg: "Already completed" });
-          } else {
-            teamDetails = createTeam(teamId);
-            teamHelper.addTeam(teamDetails).then((data) => {
-              res.render("clues/clue2");
-            });
-          }
-        });
-        break;
-      case "edwin howard armstrong":
+      
+      case 2:
         nextPageName = "clue3";
         finalCheck(3, teamId, nextPageName, res);
         break;
-      case "edwin armstrong":
-        nextPageName = "clue3";
-        finalCheck(3, teamId, nextPageName, res);
-        break;
-      case "howard armstrong":
-        nextPageName = "clue3";
-        finalCheck(3, teamId, nextPageName, res);
-        break;
-      case "evan spiegel":
+      case 3:
         nextPageName = "clue4";
         finalCheck(4, teamId, nextPageName, res);
         break;
-      case "flutter":
+      case 4:
         nextPageName = "clue5";
         finalCheck(5, teamId, nextPageName, res);
         break;
-      case "alfieri maserati":
+      case 5:
         nextPageName = "clue6";
         finalCheck(6, teamId, nextPageName, res);
         break;
-      case "laika":
+      case 6:
         nextPageName = "clue7";
         finalCheck(7, teamId, nextPageName, res);
         break;
-      case "supercalifragilisticexpialidocious":
+      case 7:
         nextPageName = "clue8";
         finalCheck(8, teamId, nextPageName, res);
         break;
-      case "nike":
+      case 8:
         nextPageName = "clue9";
         finalCheck(9, teamId, nextPageName, res);
         break;
-      case "winged nike":
-        nextPageName = "clue9";
-        finalCheck(9, teamId, nextPageName, res);
-        break;
-      case "goddess nike":
-        nextPageName = "clue9";
-        finalCheck(9, teamId, nextPageName, res);
-        break;
-      case "nirbhay":
+      case 9:
         nextPageName = "clue10";
         finalCheck(10, teamId, nextPageName, res);
         break;
-      case "nirbhay missile":
-        nextPageName = "clue10";
-        finalCheck(10, teamId, nextPageName, res);
-        break;
-      case "grand canyon":
+      case 10:
         nextPageName = "clue11";
         finalCheck(11, teamId, nextPageName, res);
         break;
-      case "thazhvaram":
+      case 11:
         nextPageName = "clue12";
         finalCheck(12, teamId, nextPageName, res);
         break;
-      case "zoom it":
+      case 12:
         nextPageName = "clue13";
         finalCheck(13, teamId, nextPageName, res);
         break;
-      case "zoomit":
-        nextPageName = "clue13";
-        finalCheck(13, teamId, nextPageName, res);
-        break;
-      case "library":
+      case 13:
         nextPageName = "clue14";
         finalCheck(14, teamId, nextPageName, res);
         break;
-      case "drawing hall":
-        nextPageName = "clue15";
-        finalCheck(15, teamId, nextPageName, res);
-      case "tbi":
+      case 14:
         nextPageName = "clue15";
         finalCheck(15, teamId, nextPageName, res);
         break;
-      case "drawinghall":
-        nextPageName = "clue15";
-        finalCheck(15, teamId, nextPageName, res);
-        break;
-      case "canteen":
+      case 15:
         teamHelper.getTeamDetails(teamId).then((result) => {
           if (isCompletePrevClues(result, 16)) {
             if (result.currentClue == 16 || result.currentClue > 16) {
@@ -284,7 +254,7 @@ router.post("/clue", function (req, res) {
 });
 // leader board page(UNCOMMENT IF U WANT TO USE)
 // sorted by treasure time and clue (by underemployed 24-02-2024)
-router.get("/leaderboard", function (req, res) {
+router.get("/vault-access2k25", function (req, res) {
   teamHelper.getAllTeamData().then((TeamData) => {
     TeamData.sort((a, b) => {
       if (a.treasureTime && b.treasureTime) {
