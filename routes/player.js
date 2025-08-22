@@ -6,7 +6,7 @@ var teamHelper = require("../helpers/team-helper");
 // edited by Underemployed 17-02-2024
 function verifyTeam(Id) {
   var isTeamId = false;
-  for (var i = 1; i <= 25; i++) {
+  for (var i = 1; i <= 30; i++) {
     var teamId = "team" + (i > 9 ? i : "0" + i);
     if (Id === teamId) {
       isTeamId = true;
@@ -254,29 +254,29 @@ router.post("/clue", async function (req, res) {
 });
 // leader board page(UNCOMMENT IF U WANT TO USE)
 // sorted by treasure time and clue (by underemployed 24-02-2024)
-// router.get("/vault-access2k25", function (req, res) {
-//   teamHelper.getAllTeamData().then((TeamData) => {
-//     TeamData.sort((a, b) => {
-//       if (a.treasureTime && b.treasureTime) {
-//         return new Date(a.treasureTime) - new Date(b.treasureTime);
-//       } else if (a.treasureTime) {
-//         return -1;
-//       } else if (b.treasureTime) {
-//         return 1;
-//       } else {
-//         return b.currentClue - a.currentClue;
-//       }
-//     });
+router.get("/vault-access2k25", function (req, res) {
+  teamHelper.getAllTeamData().then((TeamData) => {
+    TeamData.sort((a, b) => {
+      if (a.treasureTime && b.treasureTime) {
+        return new Date(a.treasureTime) - new Date(b.treasureTime);
+      } else if (a.treasureTime) {
+        return -1;
+      } else if (b.treasureTime) {
+        return 1;
+      } else {
+        return b.currentClue - a.currentClue;
+      }
+    });
 
-//     var i = 1;
-//     TeamData.forEach((element) => {
-//       element.index = i;
-//       i++;
-//       element.atTreasure; // at treasure text
-//     });
-//     res.render("partials/leaderboard", { layout: false, TeamData });
-//   });
-// });
+    var i = 1;
+    TeamData.forEach((element) => {
+      element.index = i;
+      i++;
+      element.atTreasure; // at treasure text
+    });
+    res.render("partials/leaderboard", { layout: false, TeamData });
+  });
+});
 router.get("/track", function (req, res) {
   teamHelper.getAllTeamData().then((TeamData) => {
     TeamData.sort((a, b) => {
