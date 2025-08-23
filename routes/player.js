@@ -6,7 +6,7 @@ var teamHelper = require("../helpers/team-helper");
 // edited by Underemployed 17-02-2024
 function verifyTeam(Id) {
   var isTeamId = false;
-  for (var i = 1; i <= 30; i++) {
+  for (var i = 1; i <= 40; i++) {
     var teamId = "team" + (i > 9 ? i : "0" + i);
     if (Id === teamId) {
       isTeamId = true;
