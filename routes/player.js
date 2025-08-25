@@ -254,7 +254,7 @@ router.post("/clue", async function (req, res) {
 });
 // leader board page(UNCOMMENT IF U WANT TO USE)
 // sorted by treasure time and clue (by underemployed 24-02-2024)
-router.get("/vault-access2k25", function (req, res) {
+router.get("/vault", function (req, res) {
   teamHelper.getAllTeamData().then((TeamData) => {
     TeamData.sort((a, b) => {
       if (a.treasureTime && b.treasureTime) {
@@ -274,7 +274,7 @@ router.get("/vault-access2k25", function (req, res) {
       i++;
       element.atTreasure; // at treasure text
     });
-    res.render("partials/leaderboard", { layout: false, TeamData });
+    res.render("partials/leaderboard", { TeamData });
   });
 });
 router.get("/track", function (req, res) {
